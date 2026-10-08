@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GF - Fra</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Cormorant Garamond for luxury serif + Prompt for clean modern Thai text -->
+   <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Prompt"', 'sans-serif'],
+          },
+          colors: {
+            brandDark: '#121212',
+            brandSurface: '#1c1c1e',
+            brandCard: '#242426',
+            brandGold: '#e8c582',
+            brandGoldLight: '#f6e4be',
+            brandMuted: '#9e9ea7'
+          }
+        }
+      }
+    }
+  </script>
+
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brandGold selection:text-black">
+
+ <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm px-4 py-2.5 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      
+      <!-- Hamburger Menu Button -->
+      <button
+        id="btnOpenMenu" 
+        aria-label="เปิดเมนูหลัก" 
+        class="p-2 -ml-2 text-stone-800 hover:text-amber-600 transition-colors focus:outline-none flex items-center justify-center rounded-lg active:scale-95"
+      >
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Center Logo / Branding -->
+      <a href="#home" class="flex flex-col items-center group">
+        <div class="flex items-center space-x-1.5">
+          <!-- Stylized basket icon badge --><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12zm-7-8c-1.66 0-3-1.34-3-3H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-2c0 1.66-1.34 3-3 3z"/>
+          </svg>
+         <img src="https://lh3.googleusercontent.com/d/1U9cF4iQ2kOyz_4ACAJXQBGntAd6IfkR2" 
+        alt="Logo" 
+        width="250" 
+        style="height: auto; max-width: 100%; object-fit: contain;">
+        </div>
+        <span class="text-[10px] uppercase tracking-[0.25em] text-stone-400 -mt-1 font-medium"></span>
+      </a>
+
+      <!-- Right Action Icons: Search & Cart -->
+      <div class="flex items-center space-x-3">
+        <!-- Search Trigger -->
+        <button 
+          id="btnOpenSearch" 
+          aria-label="ค้นหาสินค้า" 
+          class="p-2 text-stone-800 hover:text-amber-600 transition-colors active:scale-90"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <!-- Shopping Cart with dynamic count badge -->
+        <button 
+          id="btnOpenCart" 
+          aria-label="ตะกร้าสินค้า" 
+          class="relative p-2 -mr-2 text-stone-800 hover:text-amber-600 transition-colors active:scale-90"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span id="cartCountBadge" class="absolute -top-1 -right-0.5 bg-rose-600 text-white font-bold text-[11px] h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border border-[#121212]">
+            2
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <aside 
+    id="sideDrawer" 
+    class="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-black text-white z-50 transform -translate-x-full drawer-transition border-r border-white/20 shadow-2xl flex flex-col justify-between"
+    aria-hidden="true"
+  >
+    <div>
+      <!-- Drawer Header with Close Button -->
+      <div class="flex items-center justify-between p-4 border-b border-white/15">
+        <span class="text-xs uppercase tracking-widest text-brandGold font-semibold">เมนู</span>
+        <button 
+          id="btnCloseMenu" 
+          aria-label="ปิดเมนู" 
+          class="p-2 text-stone-800 hover:text-amber-600 rounded-lg focus:outline-none"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Menu links styled exactly with subtle divider borders -->
+      <nav class="flex flex-col text-base font-light">
+        <a href="#home" class="menu-item px-5 py-4 text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors font-medium">
+          หน้าหลัก
+        </a>
+        <a href="#about" class="menu-item px-5 py-4 text-stone-200 hover:text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors">
+          เกี่ยวกับเรา
+        </a>
+        <a href="#articles" class="menu-item px-5 py-4 text-stone-200 hover:text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors">
+          บทความ
+        </a>
+        <a href="#locations" class="menu-item px-5 py-4 text-stone-200 hover:text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors">
+          แผนที่สาขา
+        </a>
+        <a href="#news" class="menu-item px-5 py-4 text-stone-200 hover:text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors">
+          ข่าวสาร
+        </a>
+        <a href="#promotions" class="menu-item px-5 py-4 text-stone-200 hover:text-brandGold hover:bg-neutral-900 border-b border-white/10 transition-colors">
+          โปรโมชั่น
+        </a>
+      </nav>
+    </div>
+
+    <!-- Drawer Footer Info -->
+    <div class="p-5 border-t border-white/10 text-xs text-stone-400 space-y-2 bg-[#0c0c0e]">
+      <p class="font-medium text-stone-200">ริมปิง ซุปเปอร์มาร์เก็ต เชียงใหม่</p>
+      <p class="text-stone-400">ประสบการณ์ช้อปปิ้งเพื่อคุณภาพชีวิตที่ดี</p>
+      <p class="text-[11px] text-stone-500 pt-1">โทร: 053-903-777</p>
+    </div>
+  </aside>
+
+  <!-- Drawer Backdrop Overlay -->
+  <div id="drawerOverlay" class="fixed inset-0 bg-black/75 z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Search Modal -->
+  <div id="searchModal" class="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity">
+    <div class="bg-brandSurface w-full max-w-lg rounded-2xl border border-white/15 p-5 shadow-2xl text-white">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <h3 class="text-lg font-medium text-brandGoldLight">ค้นหาสินค้าหรือบทความ</h3>
+        <button id="btnCloseSearch" class="text-stone-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="mt-4 relative">
+        <input 
+          id="searchInput"
+          type="text" 
+          placeholder="พิมพ์คำค้น เช่น ผักออร์แกนิก, ไวน์นำเข้า, ถุงผ้า..." 
+          class="w-full bg-black/60 border border-white/20 rounded-xl px-4 py-3 pl-10 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-brandGold"
+        >
+        <svg class="w-5 h-5 text-stone-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2 text-xs">
+        <span class="text-stone-400 py-1">คำค้นยอดนิยม:</span>
+        <button class="bg-white/10 hover:bg-brandGold hover:text-black transition-colors px-2.5 py-1 rounded-full">ผลไม้สด</button>
+        <button class="bg-white/10 hover:bg-brandGold hover:text-black transition-colors px-2.5 py-1 rounded-full">ชีสนำเข้า</button>
+        <button class="bg-white/10 hover:bg-brandGold hover:text-black transition-colors px-2.5 py-1 rounded-full">Rimping Tote Bag</button>
+        <button class="bg-white/10 hover:bg-brandGold hover:text-black transition-colors px-2.5 py-1 rounded-full">กาแฟคั่วบด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Modal / Side Sheet -->
+  <div id="cartModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity">
+    <div class="bg-brandSurface w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-white/15 p-5 shadow-2xl text-white max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-brandGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <h3 class="text-lg font-medium text-white">ตะกร้าสินค้าของคุณ</h3>
+        </div>
+        <button id="btnCloseCart" class="text-stone-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Items List -->
+      <div class="my-4 overflow-y-auto space-y-3.5 pr-1 divide-y divide-white/5">
+        <div class="flex items-center justify-between pt-2">
+          <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=140&q=80" alt="กระเป๋าผ้า" class="w-14 h-14 object-cover rounded-lg border border-white/10">
+            <div>
+              <p class="text-sm font-medium">Rimping Canvas Tote (Art Edition)</p>
+              <p class="text-xs text-brandGold">฿ 450</p>
+            </div>
+          </div>
+          <span class="text-xs bg-white/10 px-2 py-1 rounded">1 ชิ้น</span>
+        </div>
+        <div class="flex items-center justify-between pt-3">
+          <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=140&q=80" alt="ส้มสดคัดพิเศษ" class="w-14 h-14 object-cover rounded-lg border border-white/10">
+            <div>
+              <p class="text-sm font-medium">ส้มสายน้ำผึ้ง ออร์แกนิก 1 กก.</p>
+              <p class="text-xs text-brandGold">฿ 120</p>
+            </div>
+          </div>
+          <span class="text-xs bg-white/10 px-2 py-1 rounded">1 แพ็ค</span>
+        </div>
+      </div>
+
+      <!-- Total & Action -->
+      <div class="pt-3 border-t border-white/10 space-y-3">
+        <div class="flex justify-between items-center text-sm font-medium">
+          <span class="text-stone-400">ยอดรวมโดยประมาณ:</span>
+          <span class="text-lg text-brandGold font-semibold">฿ 570</span>
+        </div>
+        <button onclick="simulateCheckout()" class="w-full py-3 bg-brandGold hover:bg-brandGoldLight text-stone-950 font-semibold rounded-xl transition-all shadow-lg active:scale-98">
+          ดำเนินการชำระเงิน
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main id="home" class="flex-grow max-w-4xl mx-auto w-full">
+    <!-- Hero Slider Container -->
+    <section class="relative w-full aspect-[4/5] sm:aspect-[16/10] overflow-hidden bg-black select-none group">
+      <!-- Slides Wrapper -->
+      <div id="carouselTrack" class="flex h-full w-full transition-transform duration-500 ease-out">
+        
+        <!-- Slide 1: Mural Art Supermarket (Inspired directly by screenshot 1) -->
+        <div class="min-w-full h-full relative flex items-center justify-center">
+          <img 
+            src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85" 
+            alt="Mural Art Girl on Bicycle Supermarket" 
+            class="w-full h-full object-cover"
+          >
+          <!-- Vintage Mural Text Overlay matching "Supermarket" handwriting vibe -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex flex-col justify-between p-6">
+            <div class="text-right">
+              <span class="inline-block text-rose-500 font-serif text-3xl sm:text-5xl font-extrabold italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] tracking-wide">
+                Supermarket
+              </span>
+              <p class="text-amber-200 text-xs sm:text-sm font-light tracking-widest uppercase">The Art of Fresh Life</p>
+            </div>
+            <div>
+              <span class="bg-black/60 backdrop-blur-md text-amber-200 text-xs px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200/30">Art Exhibition Wall</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Fresh Farm Produce & Vibrant Colors -->
+        <div class="min-w-full h-full relative flex items-center justify-center">
+          <img 
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85" 
+            alt="Fresh Organic Produce" 
+            class="w-full h-full object-cover"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex flex-col justify-end p-6">
+            <h2 class="text-2xl sm:text-4xl font-serif text-white drop-shadow-md">Curated from Local Farms</h2>
+            <p class="text-stone-300 text-xs sm:text-sm mt-1">ผักผลไม้สดคุณภาพสูงคัดสรรจากเกษตรกรท้องถิ่นเพื่อคุณ</p>
+          </div>
+        </div>
+
+        <!-- Slide 3: Fine Wine & European Grocery Ambience -->
+        <div class="min-w-full h-full relative flex items-center justify-center">
+          <img 
+            src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=85" 
+            alt="Fine Wine Collection" 
+            class="w-full h-full object-cover"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex flex-col justify-end p-6">
+            <h2 class="text-2xl sm:text-4xl font-serif text-white drop-shadow-md">World-Class Selections</h2>
+            <p class="text-stone-300 text-xs sm:text-sm mt-1">ไวน์ ชีส และวัตถุดิบนำเข้าชั้นเลิศจากทั่วมุมโลก</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Slider Left Arrow -->
+      <button 
+        id="btnPrevSlide" 
+        aria-label="รูปภาพก่อนหน้า" 
+        class="absolute left-2.5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 bg-black/60 hover:bg-black/85 text-white flex items-center justify-center rounded border border-white/20 active:scale-95 transition-all shadow-lg z-10"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <!-- Slider Right Arrow -->
+      <button 
+        id="btnNextSlide" 
+        aria-label="รูปภาพถัดไป" 
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 bg-black/60 hover:bg-black/85 text-white flex items-center justify-center rounded border border-white/20 active:scale-95 transition-all shadow-lg z-10"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+
+      <!-- Slider Dots / Indicators -->
+      <div id="carouselDots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+        <button class="w-2.5 h-2.5 rounded-full bg-white transition-all"></button>
+        <button class="w-2.5 h-2.5 rounded-full bg-white/40 transition-all"></button>
+        <button class="w-2.5 h-2.5 rounded-full bg-white/40 transition-all"></button>
+      </div>
+    </section>
+
+    <section id="about" class="px-5 py-9 text-center bg-[#121212] border-b border-white/10">
+      <div class="max-w-xl mx-auto space-y-4">
+        <!-- Prominent Classic Serif Header -->
+        <h1 class="serif-title text-3xl sm:text-4xl font-semibold tracking-wide text-white">
+          Rimping Supermarket
+        </h1>
+        
+        <!-- Exact Brand Mission Statement in Thai -->
+        <p class="text-sm sm:text-base text-stone-300 font-light leading-relaxed tracking-normal px-2">
+          ริมปิงซุปเปอร์มาร์เก็ต มุ่งมั่นที่จะทำให้การช้อปปิ้งประจำวัน เป็นประสบการณ์ที่งดงาม และ เพลิดเพลินใจ 
+          ผสมผสานราคาที่เป็นธรรม และ มาตรฐานการดูแลลูกค้าในระดับสูง ด้วยความมุ่งมั่นอันยาวนานเพื่อสวัสดิการของชุมชนท้องถิ่น และ เพื่อสิ่งแวดล้อม
+        </p>
+
+        <div class="pt-3 flex items-center justify-center space-x-3 text-xs tracking-wider text-brandGold uppercase">
+          <span class="h-px w-8 bg-brandGold/40"></span>
+          <span>Chiang Mai, Thailand &bull; Est. 1990</span>
+          <span class="h-px w-8 bg-brandGold/40"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="articles" class="px-4 py-8 space-y-6">
+      
+      <div class="flex items-center justify-between pb-2 border-b border-white/10">
+        <div>
+          <h2 class="serif-title text-2xl text-white font-medium">Stories & Lifestyle</h2>
+          <p class="text-xs text-stone-400">ศิลปะ วิถีชีวิต และบรรยากาศความสุขในทุกมุมมอง</p>
+        </div>
+        <span class="text-xs text-brandGold">Gallery Feed</span>
+      </div>
+
+      <!-- Feed Container: Vertical stacked luxury cards like mobile feed -->
+      <div class="space-y-6">
+
+        <!-- Card 1: The Mosaic Tile Rimping Logo Sign (Image 3) -->
+        <article class="bg-[#18181a] rounded-xl overflow-hidden border border-white/10 shadow-lg group">
+          <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=80', 'Rimping Mosaic Signature Sign', 'ป้ายชื่อริมปิงทำจากกระเบื้องโมเสกสีสันสดใส สะท้อนถึงความเป็นศิลปะที่ประณีตของเชียงใหม่')">
+            <img 
+              src="https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=80" 
+              alt="Rimping mosaic tiles signage" 
+              class="w-full aspect-[16/9] object-cover object-center group-hover:scale-102 transition-transform duration-500"
+              loading="lazy"
+            >
+            <div class="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-[11px] text-white flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>ขยายดูรูป</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="serif-title text-xl text-white font-medium">The Mosaic Identity</h3>
+            <p class="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+              อัตลักษณ์ป้ายร้านกระเบื้องโมเสกหลากสีที่ได้รับแรงบันดาลใจจากงานช่างฝีมือล้านนา สัญลักษณ์แห่งความพิถีพิถันและการต้อนรับอันอบอุ่น
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 2: Venus in Supermarket Tote Bag (Image 3 middle) -->
+        <article class="bg-[#18181a] rounded-xl overflow-hidden border border-white/10 shadow-lg group">
+          <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('https://lh3.googleusercontent.com/d/157Ygwustl5yQmZuhMu6bww41inxAWetA', 'Rimping Supermarket - Venus Art Tote Bag', 'Celebrating Art and Everyday Life - The Artist Edition Tote Bag')">
+            <img 
+              src="https://lh3.googleusercontent.com/d/157Ygwustl5yQmZuhMu6bww41inxAWetA" 
+              alt="Rimping Supermarket tote bag with classical Venus painting" 
+              class="w-full aspect-[4/3] object-cover object-center group-hover:scale-102 transition-transform duration-500"
+              loading="lazy"
+            >
+            <div class="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-[11px] text-white flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>ขยายดูรูป</span>
+            </div>
+          </div>
+          <div class="p-4 flex items-start justify-between">
+            <div class="pr-2">
+              <span class="text-[10px] text-brandGold uppercase tracking-wider font-semibold">Artist Edition Series</span>
+              <h3 class="serif-title text-xl text-white font-medium">Venus in Supermarket Bag</h3>
+              <p class="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+                คอลเลกชันกระเป๋าผ้าพิเศษ “Celebrating Art and Everyday Life” ผสานผลงานจิตรกรรมคลาสสิกระดับโลกกับการช้อปปิ้งประจำวันอย่างมีสไตล์
+              </p>
+            </div>
+            <button onclick="addToCart('Rimping Canvas Tote (Art Edition)', 450)" class="shrink-0 mt-1 px-3 py-1.5 bg-brandGold/20 hover:bg-brandGold text-brandGold hover:text-black border border-brandGold/40 rounded-lg text-xs transition-colors">
+              + เพิ่มลงตะกร้า
+            </button>
+          </div>
+        </article>
+
+        <!-- Card 3: In-Store Ceiling Fresco & Artistic Interior (Image 3 bottom) -->
+        <article class="bg-[#18181a] rounded-xl overflow-hidden border border-white/10 shadow-lg group">
+          <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80', 'Architectural Ceiling & Art Decor', 'จิตรกรรมประดับเพดานและการตกแต่งภายในระดับพรีเมียม')">
+            <img 
+              src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80" 
+              alt="Artistic ceiling paintings in store" 
+              class="w-full aspect-[16/9] object-cover group-hover:scale-102 transition-transform duration-500"
+              loading="lazy"
+            >
+            <div class="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-[11px] text-white flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>ขยายดูรูป</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="serif-title text-xl text-white font-medium">Ceiling Frescoes & Ambiance</h3>
+            <p class="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+              สุนทรียภาพแห่งการเดินเลือกสินค้า เพลิดเพลินไปกับภาพจิตรกรรมฝาผนังและเพดานที่ได้รับแรงบันดาลใจจากยุคเรเนซองส์
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 4: Deli, Meat & Fresh Bakery Section (Image 4 top & middle) -->
+        <article class="bg-[#18181a] rounded-xl overflow-hidden border border-white/10 shadow-lg group">
+          <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1000&q=80', 'Butcher & Gourmet Delicatessen', 'ตู้แช่เนื้อสัตว์คุณภาพสูงและเคาน์เตอร์เดลี่เกรดพรีเมียม')">
+            <img 
+              src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1000&q=80" 
+              alt="Gourmet Delicatessen counter" 
+              class="w-full aspect-[4/3] object-cover group-hover:scale-102 transition-transform duration-500"
+              loading="lazy"
+            >
+            <div class="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-[11px] text-white flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>ขยายดูรูป</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="serif-title text-xl text-white font-medium">Gourmet Butchery & Deli</h3>
+            <p class="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+              โซนเนื้อนำเข้า ดรายเอจด์ ชีส และไส้กรอกโฮมเมดมาตรฐานยุโรป พร้อมผู้เชี่ยวชาญให้คำแนะนำทุกเมนูพิเศษของคุณ
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 5: Wine Cellar & "Creativity Takes Courage" Henri Matisse quote (Image 4 bottom) -->
+        <article class="bg-[#18181a] rounded-xl overflow-hidden border border-white/10 shadow-lg group">
+          <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1000&q=80', 'Wine & Spirits with Art Gallery', 'มุมคลังไวน์ที่มีข้อความ Creativity takes courage - Henri Matisse')">
+            <img 
+              src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1000&q=80" 
+              alt="Wine cellar and art painting display" 
+              class="w-full aspect-[4/3] object-cover group-hover:scale-102 transition-transform duration-500"
+              loading="lazy"
+            >
+            <div class="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-[11px] text-white flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>ขยายดูรูป</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <blockquote class="italic text-brandGold font-serif text-lg">
+              "Creativity takes courage." <span class="text-xs text-stone-400 font-sans not-italic block mt-0.5">— Henri Matisse</span>
+            </blockquote>
+            <h3 class="serif-title text-xl text-white font-medium mt-2">Wine & Spirit Cellar</h3>
+            <p class="text-xs sm:text-sm text-stone-400 mt-1 leading-relaxed">
+              มุมไวน์ชั้นดีที่จัดวางควบคู่ไปกับผลงานภาพวาดแฟนตาซีและการประดับด้วยต้นมะกอก ให้ความรู้สึกเหมือนกำลังเดินอยู่ในแกลเลอรีไวน์แถบเมดิเตอร์เรเนียน
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="locations" class="px-5 py-8 bg-[#18181a] border-t border-b border-white/10">
+      <div class="max-w-xl mx-auto space-y-4">
+        <h2 class="serif-title text-2xl text-white font-medium text-center">สาขาของเราในเชียงใหม่</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3.5 bg-black/40 rounded-xl border border-white/5 hover:border-brandGold/30 transition-colors">
+            <p class="font-medium text-brandGoldLight">สาขานวรัฐ (Nawarat)</p>
+            <p class="text-xs text-stone-400 mt-1">ใกล้สะพานนวรัฐ ริมแม่น้ำปิง</p>
+            <p class="text-[11px] text-stone-500 mt-2">เปิดทุกวัน: 08:00 - 21:00 น.</p>
+          </div>
+          <div class="p-3.5 bg-black/40 rounded-xl border border-white/5 hover:border-brandGold/30 transition-colors">
+            <p class="font-medium text-brandGoldLight">สาขาเมญ่า (MAYA)</p>
+            <p class="text-xs text-stone-400 mt-1">ชั้น B1 ห้างสรรพสินค้า MAYA เชียงใหม่</p>
+            <p class="text-[11px] text-stone-500 mt-2">เปิดทุกวัน: 10:00 - 22:00 น.</p>
+          </div>
+          <div class="p-3.5 bg-black/40 rounded-xl border border-white/5 hover:border-brandGold/30 transition-colors">
+            <p class="font-medium text-brandGoldLight">สาขามีโชคพลาซ่า (Meechok)</p>
+            <p class="text-xs text-stone-400 mt-1">สี่แยกรวมโชคมีชัย</p>
+            <p class="text-[11px] text-stone-500 mt-2">เปิดทุกวัน: 08:00 - 21:30 น.</p>
+          </div>
+          <div class="p-3.5 bg-black/40 rounded-xl border border-white/5 hover:border-brandGold/30 transition-colors">
+            <p class="font-medium text-brandGoldLight">สาขานิ่มซิตี้เดลี่ (Nim City)</p>
+            <p class="text-xs text-stone-400 mt-1">ใกล้สี่แยกสนามบินเชียงใหม่</p>
+            <p class="text-[11px] text-stone-500 mt-2">เปิดทุกวัน: 08:00 - 21:00 น.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="promotions" class="px-5 py-8">
+      <div class="bg-gradient-to-r from-stone-900 to-black p-6 rounded-2xl border border-brandGold/20 relative overflow-hidden">
+        <div class="relative z-10 max-w-sm">
+          <span class="text-xs font-semibold text-brandGold uppercase tracking-wider">Member Privilege</span>
+          <h3 class="serif-title text-2xl text-white font-semibold mt-1">Rimping Privilege Card</h3>
+          <p class="text-xs text-stone-300 mt-2 leading-relaxed">
+            สะสมแต้มทุกการใช้จ่ายเพื่อแลกรับส่วนลดพิเศษ และของที่ระลึกคอลเลกชัน Art Limited Edition ตลอดทั้งปี
+          </p>
+          <button onclick="showToast('สมัครสมาชิกร่วมแคมเปญสำเร็จ! เจ้าหน้าที่จะติดต่อกลับ')" class="mt-4 px-4 py-2 bg-brandGold hover:bg-brandGoldLight text-black text-xs font-semibold rounded-lg transition-all active:scale-95 shadow">
+            สมัครสมาชิกฟรี
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/95 flex flex-col justify-between hidden opacity-0 transition-opacity duration-300 p-4">
+    <div class="flex justify-end pt-2 pr-2">
+      <button id="btnCloseLightbox" class="text-stone-300 hover:text-white p-2 rounded-full bg-white/10 active:scale-90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="flex-grow flex flex-col items-center justify-center max-w-3xl mx-auto w-full my-auto px-2">
+      <img id="lightboxImage" src="" alt="ภาพขยาย" class="max-h-[68vh] w-auto max-w-full rounded-xl object-contain shadow-2xl border border-white/15">
+      <div class="mt-4 text-center">
+        <h4 id="lightboxTitle" class="serif-title text-xl text-brandGold font-medium"></h4>
+        <p id="lightboxCaption" class="text-xs sm:text-sm text-stone-300 mt-1 max-w-md"></p>
+      </div>
+    </div>
+    <div class="py-2 text-center text-[11px] text-stone-500">
+      แตะที่ใดก็ได้เพื่อปิดรูปภาพ
+    </div>
+  </div>
+
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-brandGold text-stone-950 px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center space-x-2">
+    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+    <span id="toastMessage">แจ้งเตือน</span>
+  </div>
+
+  <footer class="bg-black border-t border-white/10 text-stone-400 text-xs py-10 px-5 mt-8">
+    <div class="max-w-4xl mx-auto flex flex-col items-center text-center space-y-4">
+      <div class="serif-title text-2xl text-white tracking-wider"><img width="300px" height="0px" src="/HORIZONAL-LOGO.webp" alt=""></div>
+      <p class="max-w-md text-stone-400 text-xs leading-relaxed">
+        ซูเปอร์มาร์เก็ตชั้นนำของเชียงใหม่ ผู้นำด้านวัตถุดิบคุณภาพ อาหารปลอดภัย และงานศิลปะเพื่อชุมชน
+      </p>
+      <!-- ช่องทางติดต่อ -->
+<div class="flex items-center justify-center gap-3 pt-1">
+
+  <!-- โทรศัพท์ -->
+  <a href="tel:0909913116" aria-label="โทร" title="โทร"
+     class="w-10 h-10 flex items-center justify-center rounded-full border border-black/15 text-stone-700 hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-colors active:scale-95">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </svg>
+  </a>
+
+  <!-- LINE (ใช้ตัวอักษรแทนโลโก้) -->
+  <a href="https://line.me/ti/p/@yourlineid" target="_blank" rel="noreferrer" aria-label="LINE" title="LINE"
+     class="w-10 h-10 flex items-center justify-center rounded-full border border-black/15 text-stone-700 text-[10px] font-bold tracking-tight hover:bg-[#06C755] hover:border-[#06C755] hover:text-white transition-colors active:scale-95">
+    LINE
+  </a>
+
+  <!-- Facebook -->
+  <a href="https://www.facebook.com/yourpage" target="_blank" rel="noreferrer" aria-label="Facebook" title="Facebook"
+     class="w-10 h-10 flex items-center justify-center rounded-full border border-black/15 text-stone-700 hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white transition-colors active:scale-95">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </svg>
+  </a>
+
+  <!-- Instagram -->
+  <a href="https://www.instagram.com/yourpage" target="_blank" rel="noreferrer" aria-label="Instagram" title="Instagram"
+     class="w-10 h-10 flex items-center justify-center rounded-full border border-black/15 text-stone-700 hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-colors active:scale-95">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+    </svg>
+  </a>
+
+  <!-- อีเมล -->
+  <a href="mailto:info@gffresh.com" aria-label="อีเมล" title="อีเมล"
+     class="w-10 h-10 flex items-center justify-center rounded-full border border-black/15 text-stone-700 hover:bg-amber-600 hover:border-amber-600 hover:text-white transition-colors active:scale-95">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="m22 7-10 6L2 7"/>
+    </svg>
+  </a>
+
+</div>
+      <div class="flex space-x-6 text-stone-300 text-xs pt-2">
+        <a href="#about" class="hover:text-brandGold transition-colors">เกี่ยวกับเรา</a>
+        <a href="#locations" class="hover:text-brandGold transition-colors">สาขา</a>
+        <a href="#promotions" class="hover:text-brandGold transition-colors">โปรโมชั่น</a>
+        <a href="https://www.rimping.com" target="_blank" rel="noreferrer" class="hover:text-brandGold transition-colors">www.rimping.com</a>
+      </div>
+      <p class="text-[11px] text-stone-600 pt-4 border-t border-white/5 w-full">
+        &copy; 2026 Rimping Supermarket Chiang Mai. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // State management
+    let currentSlide = 0;
+    const totalSlides = 3;
+    let slideTimer = null;
+    let cartTotalItems = 2;
+
+    // Elements
+    const sideDrawer = document.getElementById('sideDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const btnOpenMenu = document.getElementById('btnOpenMenu');
+    const btnCloseMenu = document.getElementById('btnCloseMenu');
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    const searchModal = document.getElementById('searchModal');
+    const btnOpenSearch = document.getElementById('btnOpenSearch');
+    const btnCloseSearch = document.getElementById('btnCloseSearch');
+    const searchInput = document.getElementById('searchInput');
+
+    const cartModal = document.getElementById('cartModal');
+    const btnOpenCart = document.getElementById('btnOpenCart');
+    const btnCloseCart = document.getElementById('btnCloseCart');
+    const cartCountBadge = document.getElementById('cartCountBadge');
+
+    const carouselTrack = document.getElementById('carouselTrack');
+    const btnPrevSlide = document.getElementById('btnPrevSlide');
+    const btnNextSlide = document.getElementById('btnNextSlide');
+    const carouselDots = document.getElementById('carouselDots').children;
+
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const btnCloseLightbox = document.getElementById('btnCloseLightbox');
+
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMessage');
+
+    // Drawer Controls
+    function openDrawer() {
+      sideDrawer.classList.remove('-translate-x-full');
+      sideDrawer.classList.add('translate-x-0');
+      sideDrawer.setAttribute('aria-hidden', 'false');
+      drawerOverlay.classList.remove('hidden');
+      setTimeout(() => drawerOverlay.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      sideDrawer.classList.remove('translate-x-0');
+      sideDrawer.classList.add('-translate-x-full');
+      sideDrawer.setAttribute('aria-hidden', 'true');
+      drawerOverlay.classList.remove('opacity-100');
+      setTimeout(() => {
+        drawerOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    btnOpenMenu.addEventListener('click', openDrawer);
+    btnCloseMenu.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        closeDrawer();
+      });
+    });
+
+    // Search Modal
+    function openSearch() {
+      searchModal.classList.remove('hidden');
+      setTimeout(() => {
+        searchModal.classList.add('opacity-100');
+        searchInput.focus();
+      }, 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSearch() {
+      searchModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        searchModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnOpenSearch.addEventListener('click', openSearch);
+    btnCloseSearch.addEventListener('click', closeSearch);
+    searchModal.addEventListener('click', (e) => {
+      if (e.target === searchModal) closeSearch();
+    });
+
+    // Cart Modal
+    function openCart() {
+      cartModal.classList.remove('hidden');
+      setTimeout(() => cartModal.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      cartModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        cartModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnOpenCart.addEventListener('click', openCart);
+    btnCloseCart.addEventListener('click', closeCart);
+    cartModal.addEventListener('click', (e) => {
+      if (e.target === cartModal) closeCart();
+    });
+
+    // Carousel Logic
+    function updateCarousel() {
+      carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+      Array.from(carouselDots).forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.className = "w-4 h-2.5 rounded-full bg-brandGold transition-all";
+        } else {
+          dot.className = "w-2.5 h-2.5 rounded-full bg-white/40 transition-all";
+        }
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    btnNextSlide.addEventListener('click', () => {
+      nextSlide();
+      resetAutoplay();
+    });
+
+    btnPrevSlide.addEventListener('click', () => {
+      prevSlide();
+      resetAutoplay();
+    });
+
+    Array.from(carouselDots).forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateCarousel();
+        resetAutoplay();
+      });
+    });
+
+    // Touch Swipe for Hero Slider
+    let startX = 0;
+    carouselTrack.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    carouselTrack.addEventListener('touchend', e => {
+      let endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        nextSlide();
+        resetAutoplay();
+      } else if (endX - startX > 50) {
+        prevSlide();
+        resetAutoplay();
+      }
+    }, { passive: true });
+
+    function resetAutoplay() {
+      clearInterval(slideTimer);
+      slideTimer = setInterval(nextSlide, 5000);
+    }
+    resetAutoplay();
+
+    // Lightbox Modal
+    window.openLightbox = function(imageUrl, title, caption) {
+      lightboxImage.src = imageUrl;
+      lightboxTitle.innerText = title;
+      lightboxCaption.innerText = caption;
+      lightboxModal.classList.remove('hidden');
+      setTimeout(() => lightboxModal.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closeLightbox() {
+      lightboxModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        lightboxModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnCloseLightbox.addEventListener('click', closeLightbox);
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target !== lightboxImage) {
+        closeLightbox();
+      }
+    });
+
+    // Helper Toast
+    window.showToast = function(msg) {
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 2500);
+    };
+
+    // Add to cart simulation
+    window.addToCart = function(productName, price) {
+      cartTotalItems++;
+      cartCountBadge.innerText = cartTotalItems;
+      showToast(`เพิ่ม "${productName}" ลงตะกร้าแล้ว`);
+    };
+
+    window.simulateCheckout = function() {
+      closeCart();
+      showToast("ระบบกำลังนำคุณไปยังหน้าชำระเงิน...");
+    };
+  </script>
+</body>
+</html>
