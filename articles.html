@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GF - Fra</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Cormorant Garamond for luxury serif + Prompt for clean modern Thai text -->
+   <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Prompt"', 'sans-serif'],
+          },
+          colors: {
+            brandDark: '#121212',
+            brandSurface: '#1c1c1e',
+            brandCard: '#242426',
+            brandGold: '#e8c582',
+            brandGoldLight: '#f6e4be',
+            brandMuted: '#9e9ea7'
+          }
+        }
+      }
+    }
+  </script>
+
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brandGold selection:text-black">
+
+ <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm px-4 py-2.5 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      
+      <!-- Hamburger Menu Button -->
+      <button
+        id="btnOpenMenu" 
+        aria-label="เปิดเมนูหลัก" 
+        class="p-2 -ml-2 text-stone-800 hover:text-amber-600 transition-colors focus:outline-none flex items-center justify-center rounded-lg active:scale-95"
+      >
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Center Logo / Branding -->
+      <a href="#home" class="flex flex-col items-center group">
+        <div class="flex items-center space-x-1.5">
+          <!-- Stylized basket icon badge --><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12zm-7-8c-1.66 0-3-1.34-3-3H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-2c0 1.66-1.34 3-3 3z"/>
+          </svg>
+         <img src="https://lh3.googleusercontent.com/d/1U9cF4iQ2kOyz_4ACAJXQBGntAd6IfkR2" 
+        alt="Logo" 
+        width="250" 
+        style="height: auto; max-width: 100%; object-fit: contain;">
+        </div>
+        <span class="text-[10px] uppercase tracking-[0.25em] text-stone-400 -mt-1 font-medium"></span>
+      </a>
+
+      <!-- Right Action Icons: Search & Cart -->
+      <div class="flex items-center space-x-3">
+        <!-- Search Trigger -->
+        <button 
+          id="btnOpenSearch" 
+          aria-label="ค้นหาสินค้า" 
+          class="p-2 text-stone-800 hover:text-amber-600 transition-colors active:scale-90"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <!-- Shopping Cart with dynamic count badge -->
+        <button 
+          id="btnOpenCart" 
+          aria-label="ตะกร้าสินค้า" 
+          class="relative p-2 -mr-2 text-stone-800 hover:text-amber-600 transition-colors active:scale-90"
+        >
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    // State management
+    let currentSlide = 0;
+    const totalSlides = 3;
+    let slideTimer = null;
+    let cartTotalItems = 2;
+
+    // Elements
+    const sideDrawer = document.getElementById('sideDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const btnOpenMenu = document.getElementById('btnOpenMenu');
+    const btnCloseMenu = document.getElementById('btnCloseMenu');
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    const searchModal = document.getElementById('searchModal');
+    const btnOpenSearch = document.getElementById('btnOpenSearch');
+    const btnCloseSearch = document.getElementById('btnCloseSearch');
+    const searchInput = document.getElementById('searchInput');
+
+    const cartModal = document.getElementById('cartModal');
+    const btnOpenCart = document.getElementById('btnOpenCart');
+    const btnCloseCart = document.getElementById('btnCloseCart');
+    const cartCountBadge = document.getElementById('cartCountBadge');
+
+    const carouselTrack = document.getElementById('carouselTrack');
+    const btnPrevSlide = document.getElementById('btnPrevSlide');
+    const btnNextSlide = document.getElementById('btnNextSlide');
+    const carouselDots = document.getElementById('carouselDots').children;
+
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const btnCloseLightbox = document.getElementById('btnCloseLightbox');
+
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMessage');
+
+    // Drawer Controls
+    function openDrawer() {
+      sideDrawer.classList.remove('-translate-x-full');
+      sideDrawer.classList.add('translate-x-0');
+      sideDrawer.setAttribute('aria-hidden', 'false');
+      drawerOverlay.classList.remove('hidden');
+      setTimeout(() => drawerOverlay.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      sideDrawer.classList.remove('translate-x-0');
+      sideDrawer.classList.add('-translate-x-full');
+      sideDrawer.setAttribute('aria-hidden', 'true');
+      drawerOverlay.classList.remove('opacity-100');
+      setTimeout(() => {
+        drawerOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    btnOpenMenu.addEventListener('click', openDrawer);
+    btnCloseMenu.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        closeDrawer();
+      });
+    });
+
+    // Search Modal
+    function openSearch() {
+      searchModal.classList.remove('hidden');
+      setTimeout(() => {
+        searchModal.classList.add('opacity-100');
+        searchInput.focus();
+      }, 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSearch() {
+      searchModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        searchModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnOpenSearch.addEventListener('click', openSearch);
+    btnCloseSearch.addEventListener('click', closeSearch);
+    searchModal.addEventListener('click', (e) => {
+      if (e.target === searchModal) closeSearch();
+    });
+
+    // Cart Modal
+    function openCart() {
+      cartModal.classList.remove('hidden');
+      setTimeout(() => cartModal.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      cartModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        cartModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnOpenCart.addEventListener('click', openCart);
+    btnCloseCart.addEventListener('click', closeCart);
+    cartModal.addEventListener('click', (e) => {
+      if (e.target === cartModal) closeCart();
+    });
+
+    // Carousel Logic
+    function updateCarousel() {
+      carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+      Array.from(carouselDots).forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.className = "w-4 h-2.5 rounded-full bg-brandGold transition-all";
+        } else {
+          dot.className = "w-2.5 h-2.5 rounded-full bg-white/40 transition-all";
+        }
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    btnNextSlide.addEventListener('click', () => {
+      nextSlide();
+      resetAutoplay();
+    });
+
+    btnPrevSlide.addEventListener('click', () => {
+      prevSlide();
+      resetAutoplay();
+    });
+
+    Array.from(carouselDots).forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateCarousel();
+        resetAutoplay();
+      });
+    });
+
+    // Touch Swipe for Hero Slider
+    let startX = 0;
+    carouselTrack.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    carouselTrack.addEventListener('touchend', e => {
+      let endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        nextSlide();
+        resetAutoplay();
+      } else if (endX - startX > 50) {
+        prevSlide();
+        resetAutoplay();
+      }
+    }, { passive: true });
+
+    function resetAutoplay() {
+      clearInterval(slideTimer);
+      slideTimer = setInterval(nextSlide, 5000);
+    }
+    resetAutoplay();
+
+    // Lightbox Modal
+    window.openLightbox = function(imageUrl, title, caption) {
+      lightboxImage.src = imageUrl;
+      lightboxTitle.innerText = title;
+      lightboxCaption.innerText = caption;
+      lightboxModal.classList.remove('hidden');
+      setTimeout(() => lightboxModal.classList.add('opacity-100'), 10);
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closeLightbox() {
+      lightboxModal.classList.remove('opacity-100');
+      setTimeout(() => {
+        lightboxModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 250);
+    }
+
+    btnCloseLightbox.addEventListener('click', closeLightbox);
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target !== lightboxImage) {
+        closeLightbox();
+      }
+    });
+
+    // Helper Toast
+    window.showToast = function(msg) {
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 2500);
+    };
+
+    // Add to cart simulation
+    window.addToCart = function(productName, price) {
+      cartTotalItems++;
+      cartCountBadge.innerText = cartTotalItems;
+      showToast(`เพิ่ม "${productName}" ลงตะกร้าแล้ว`);
+    };
+
+    window.simulateCheckout = function() {
+      closeCart();
+      showToast("ระบบกำลังนำคุณไปยังหน้าชำระเงิน...");
+    };
+  </script>
+</body>
+</html>
